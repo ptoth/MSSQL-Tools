@@ -1,5 +1,5 @@
 /*
-10 useful MSSQL command from:
+Useful MSSQL command from:
 http://www.databasejournal.com/features/mssql/article.php/3923371/Top-10-Transact-SQL-Statements-a-SQL-Server-DBA-Should-Know.htm
 */
 
@@ -145,3 +145,25 @@ Also, search the internet for sp_who3.
 
 sp_who
 sp_who2
+
+--T-SQL Statement 11
+/*
+Here is a script to finding info on a database:
+MDF, NDF and LDF files - enjoy.
+*/
+
+SELECT SERVERPROPERTY('ComputerNamePhysicalNetBios') as 'Is_Current_Owner',
+    SERVERPROPERTY('MachineName') as 'MachineName',
+    @@servername as '@@servername',
+    DB_NAME() as 'Use_Name',
+    sysfilegroups.groupid,
+    sysfilegroups.groupname,
+    fileid,
+    convert(decimal(12,2),round(sysfiles.size/128.000,2)) as 'File_size_(MB)',
+    convert(decimal(12,2),round(fileproperty(sysfiles.name,'SpaceUsed')/128.000,2)) as 'Space_used(MB)',
+    convert(decimal(12,2),round((sysfiles.size-fileproperty(sysfiles.name,'SpaceUsed'))/128.000,2)) as 'Free_space(MB)',
+    cast((convert(decimal(12,2),round(fileproperty(sysfiles.name,'SpaceUsed')/128.000,2))/ convert(decimal(12,2),round(sysfiles.size/128.000,2))) * 100 as decimal(12,3)) as pct_USED,
+    cast((convert(decimal(12,2),round((sysfiles.size-fileproperty(sysfiles.name,'SpaceUsed'))/128.000,2)) / convert(decimal(12,2),round(sysfiles.size/128.000,2)) ) *100 as decimal(12,3)) as pct_free_space,
+    sysfiles.name ,sysfiles.filename
+FROM dbo.sysfiles sysfiles
+LEFT OUTER JOIN dbo.sysfilegroups sysfilegroups ON sysfiles.groupid = sysfilegroups.groupid;
