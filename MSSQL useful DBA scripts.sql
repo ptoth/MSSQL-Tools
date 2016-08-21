@@ -14,14 +14,15 @@ your SQL Server is on. It also displays
 if the current SQL Server is a clustered server.
 */
 
-SELECT
-          SERVERPROPERTY('MachineName') as Host,
-          SERVERPROPERTY('InstanceName') as Instance,
-          SERVERPROPERTY('Edition') as Edition, /*shows 32 bit or 64 bit*/
-          SERVERPROPERTY('ProductLevel') as ProductLevel, /* RTM or SP1 etc*/
-          Case SERVERPROPERTY('IsClustered') when 1 then 'CLUSTERED' else
-      'STANDALONE' end as ServerType,
-          @@VERSION as VersionNumber
+SELECT SERVERPROPERTY('MachineName') as Host
+    ,SERVERPROPERTY('InstanceName') as Instance
+    ,SERVERPROPERTY('Edition') as Edition, /*shows 32 bit or 64 bit*/
+    ,SERVERPROPERTY('ProductLevel') as ProductLevel, /* RTM or SP1 etc*/
+        Case SERVERPROPERTY('IsClustered') when 1
+            then 'CLUSTERED'
+            else 'STANDALONE'
+        end as ServerType
+    ,@@VERSION as VersionNumber
 
 --T-SQL Statement 2
 /*
@@ -44,8 +45,12 @@ The following SQL Command will show information related to the security
 admin server role and system admin server role.
 */
 
-SELECT l.name, l.denylogin, l.isntname, l.isntgroup, l.isntuser
-  FROM master.dbo.syslogins l
+SELECT l.name
+    ,l.denylogin
+    ,l.isntname
+    ,l.isntgroup
+    ,l.isntuser
+    FROM master.dbo.syslogins l
 WHERE l.sysadmin = 1 OR l.securityadmin = 1
 
 --T-SQL Statement 4
@@ -77,7 +82,11 @@ It also lists the online/offline status of the database as well as helping
 the DBA to see if any update to recovery model is necessary.
 */
 
-SELECT name,compatibility_level,recovery_model_desc,state_desc  FROM sys.databases
+SELECT name
+    ,compatibility_level
+    ,recovery_model_desc
+    ,state_desc
+FROM sys.databases
 
 --T-SQL Statement 6
 /*
@@ -87,7 +96,11 @@ name and the physical location of the data/log files of all the databases
 available in the current SQL Server instance.
 */
 
-SELECT db_name(database_id) as DatabaseName,name,type_desc,physical_name FROM sys.master_files
+SELECT db_name(database_id) as DatabaseName
+    ,name
+    ,type_desc
+    ,physical_name
+FROM sys.master_files
 
 --T-SQL Statement 7
 /*
@@ -98,7 +111,9 @@ and displays the file groups related results.
 
 EXEC master.dbo.sp_MSforeachdb @command1 = 'USE [?] SELECT * FROM sys.filegroups'
 
-/* Backup Level Transact-SQL Statements a SQL Server DBA should know */
+/*
+ * Backup Level Transact-SQL Statements a SQL Server DBA should know
+ */
 
 --T-SQL Statement 8
 /*
@@ -109,9 +124,9 @@ This will help the database administrators to check the backup jobs and
 also to make sure backups are happening for all the databases.
 */
 
-SELECT db.name,
-case when MAX(b.backup_finish_date) is NULL then 'No Backup' else convert(varchar(100),
-	MAX(b.backup_finish_date)) end AS last_backup_finish_date
+SELECT db.name
+    ,case when MAX(b.backup_finish_date) is NULL then 'No Backup' else convert(varchar(100)
+    ,MAX(b.backup_finish_date)) end AS last_backup_finish_date
 FROM sys.databases db
 LEFT OUTER JOIN msdb.dbo.backupset b ON db.name = b.database_name AND b.type = 'D'
 	WHERE db.database_id NOT IN (2)
@@ -129,7 +144,9 @@ backup location from the msdb database.
 
 SELECT Distinct physical_device_name FROM msdb.dbo.backupmediafamily
 
-/* Process Level Transact-SQL Statements a SQL Server DBA should know */
+/*
+ * Process Level Transact-SQL Statements a SQL Server DBA should know
+ */
 
 --T-SQL Statement 10
 /*
@@ -152,18 +169,19 @@ Here is a script to finding info on a database:
 MDF, NDF and LDF files - enjoy.
 */
 
-SELECT SERVERPROPERTY('ComputerNamePhysicalNetBios') as 'Is_Current_Owner',
-    SERVERPROPERTY('MachineName') as 'MachineName',
-    @@servername as '@@servername',
-    DB_NAME() as 'Use_Name',
-    sysfilegroups.groupid,
-    sysfilegroups.groupname,
-    fileid,
-    convert(decimal(12,2),round(sysfiles.size/128.000,2)) as 'File_size_(MB)',
-    convert(decimal(12,2),round(fileproperty(sysfiles.name,'SpaceUsed')/128.000,2)) as 'Space_used(MB)',
-    convert(decimal(12,2),round((sysfiles.size-fileproperty(sysfiles.name,'SpaceUsed'))/128.000,2)) as 'Free_space(MB)',
-    cast((convert(decimal(12,2),round(fileproperty(sysfiles.name,'SpaceUsed')/128.000,2))/ convert(decimal(12,2),round(sysfiles.size/128.000,2))) * 100 as decimal(12,3)) as pct_USED,
-    cast((convert(decimal(12,2),round((sysfiles.size-fileproperty(sysfiles.name,'SpaceUsed'))/128.000,2)) / convert(decimal(12,2),round(sysfiles.size/128.000,2)) ) *100 as decimal(12,3)) as pct_free_space,
-    sysfiles.name ,sysfiles.filename
+SELECT SERVERPROPERTY('ComputerNamePhysicalNetBios') as 'Is_Current_Owner'
+    ,SERVERPROPERTY('MachineName') as 'MachineName'
+    ,@@servername as '@@servername'
+    ,DB_NAME() as 'Use_Name'
+    ,sysfilegroups.groupid
+    ,sysfilegroups.groupname
+    ,fileid
+    ,convert(decimal(12,2),round(sysfiles.size/128.000,2)) as 'File_size_(MB)'
+    ,convert(decimal(12,2),round(fileproperty(sysfiles.name,'SpaceUsed')/128.000,2)) as 'Space_used(MB)'
+    ,convert(decimal(12,2),round((sysfiles.size-fileproperty(sysfiles.name,'SpaceUsed'))/128.000,2)) as 'Free_space(MB)'
+    ,cast((convert(decimal(12,2),round(fileproperty(sysfiles.name,'SpaceUsed')/128.000,2))/ convert(decimal(12,2),round(sysfiles.size/128.000,2))) * 100 as decimal(12,3)) as pct_USED
+    ,cast((convert(decimal(12,2),round((sysfiles.size-fileproperty(sysfiles.name,'SpaceUsed'))/128.000,2)) / convert(decimal(12,2),round(sysfiles.size/128.000,2)) ) *100 as decimal(12,3)) as pct_free_space
+    ,sysfiles.name
+    ,sysfiles.filename
 FROM dbo.sysfiles sysfiles
 LEFT OUTER JOIN dbo.sysfilegroups sysfilegroups ON sysfiles.groupid = sysfilegroups.groupid;
