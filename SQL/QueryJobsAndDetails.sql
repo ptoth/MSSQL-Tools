@@ -11,4 +11,3 @@ WHERE s.name != 'sa'
 
 -- Alter MSSQL job owner
 --exec msdb..sp_update_job @job_name = 'job_name', @owner_login_name = 'sa'
---_nb_ad_01 // 5R5tS-6w2SnA%EaW7_T6LJ

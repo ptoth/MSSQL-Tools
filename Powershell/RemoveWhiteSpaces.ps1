@@ -1,0 +1,1 @@
+(Get-Content file.txt) | Foreach-Object {$_ -replace '\[    \]',' '}  | Out-File file.txt

@@ -1,12 +1,7 @@
 -- Set startup mode -m switch (Single User Mode)
 -- Login via cmd:
-sqlcmd -S servername/instance
+sqlcmd -s servername/instance
 
--- Enable SA login, if not enabled
-alter login sa enable
-go
--- Update SA password
-sp_password NULL,'new_password_here','sa'
-go
--- Exit the prompt
-quit
+-- Enable SA login, if not enabledALTER login sa enablego
+-- Update SA passwordSp_password NULL,'new_password_here','sa'go
+-- Exit the promptQuit

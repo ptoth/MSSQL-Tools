@@ -2,7 +2,7 @@ SELECT TOP 25 dm_mid.database_id AS DatabaseID,
   dm_migs.avg_user_impact*(dm_migs.user_seeks+dm_migs.user_scans) Avg_Estimated_Impact,
   dm_migs.last_user_seek AS Last_User_Seek,
   OBJECT_NAME(dm_mid.OBJECT_ID,dm_mid.database_id) AS [TableName],
-  ,'CREATE INDEX [IX_' + OBJECT_NAME(dm_mid.OBJECT_ID,dm_mid.database_id) + '_'
+  'CREATE INDEX [IX_' + OBJECT_NAME(dm_mid.OBJECT_ID,dm_mid.database_id) + '_'
   + REPLACE(REPLACE(REPLACE(ISNULL(dm_mid.equality_columns,''),', ','_'),'[',''),']','')
   + CASE
       WHEN dm_mid.equality_columns IS NOT NULL
