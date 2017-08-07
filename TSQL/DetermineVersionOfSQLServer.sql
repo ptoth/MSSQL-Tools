@@ -12,7 +12,8 @@
 -- of or inability to use the sample scripts or documentation, even if Microsoft
 -- has been advised of the possibility of such damages
 
--- The script is not compatible with SQL Server 2000 and SQL Server 2005, please upgrade your SQL Server to newer edition.
+-- The script is not compatible with SQL Server 2000 and SQL Server 2005,
+-- please upgrade your SQL Server to newer edition.
 ---------------------------------------------------------------------------------
 
 DECLARE @ProductVersion		NVARCHAR(20)
@@ -208,7 +209,7 @@ BEGIN
 																		 + @2014E+@2014BI+@2014Std + @2016E+@2016BI+@2016Std
 							WHEN @EditionID = -2117995310 		THEN @2008R2Dat+@2008R2Dev + @2012Dev + @2014Dev + @2016Dev
 							WHEN @Edition LIKE 'Express%'	THEN @2008R2E+@2008R2Dat+@2008R2Std+@2008R2Wg+@2008R2Dev+@2008R2ExpAdv
-																		 + @2012E+@2012BI+@2012Std+@2012Web+@2012Exp 
+																		 + @2012E+@2012BI+@2012Std+@2012Web+@2012Exp
 																		 + @2014E+@2014BI+@2014Std+@2014Web+@2014Exp
 						END
 			END

@@ -43,4 +43,4 @@ FROM msdb.dbo.sysjobs
     LEFT OUTER JOIN msdb.dbo.sysoperators ON msdb.dbo.sysjobs.notify_page_operator_id = msdb.dbo.sysoperators.id
     LEFT OUTER JOIN msdb.dbo.sysjobservers ON msdb.dbo.sysjobs.job_id = msdb.dbo.sysjobservers.job_id
     LEFT OUTER JOIN msdb.dbo.sysjobschedules ON msdb.dbo.sysjobschedules.job_id = msdb.dbo.sysjobs.job_id
-    LEFT OUTER JOIN msdb.dbo.sysschedules onmsdb.dbo.sysjobschedules.schedule_id = msdb.dbo.sysschedules.schedule_id
+    LEFT OUTER JOIN msdb.dbo.sysschedules ON msdb.dbo.sysjobschedules.schedule_id = msdb.dbo.sysschedules.schedule_id

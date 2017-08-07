@@ -2,6 +2,13 @@
 -- Login via cmd:
 sqlcmd -s servername/instance
 
--- Enable SA login, if not enabledALTER login sa enablego
--- Update SA passwordSp_password NULL,'new_password_here','sa'go
--- Exit the promptQuit
+-- Enable SA login, if not enabled
+ALTER login sa enable
+go
+
+-- Update SA password
+Sp_password NULL,'new_password_here','sa'
+go
+
+-- Exit the prompt
+Quit
