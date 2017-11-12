@@ -43,19 +43,19 @@ DECLARE @dbid int;
 -- and convert object and index IDs to names.
 
 -- change the name of the target database here
-SET @dbname = N'Your Database'
+SET @dbname = N'Database'
 -- change this value to adjust the threshold for fragmentation 
 SET @frag = 10.0              
 
 SELECT @dbid = dbid FROM sys.sysdatabases WHERE name = @dbname
 
 SELECT
-    PS.object_id AS Objectid,
-      O.name AS ObjectName,
+    --PS.object_id AS Objectid,
       S.name AS SchemaName,
+      O.name AS ObjectName,
       I.name AS IndexName,
-    PS.index_id AS IndexId,
-    PS.partition_number AS PartitionNum,
+    --PS.index_id AS IndexId,
+    --PS.partition_number AS PartitionNum,
     ROUND(PS.avg_fragmentation_in_percent, 2) AS Fragmentation,
       PS.record_count AS RecordCount
 FROM sys.dm_db_index_physical_stats (@dbid, NULL, NULL , NULL, 'SAMPLED') PS
@@ -64,4 +64,4 @@ FROM sys.dm_db_index_physical_stats (@dbid, NULL, NULL , NULL, 'SAMPLED') PS
       JOIN sys.indexes I ON I.object_id = PS.object_id
             AND I.index_id = PS.index_id
 WHERE PS.avg_fragmentation_in_percent > @frag AND PS.index_id > 0
-ORDER BY record_count desc;
+ORDER BY Fragmentation DESC;
