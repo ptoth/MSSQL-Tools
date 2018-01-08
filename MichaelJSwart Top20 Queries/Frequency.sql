@@ -10,15 +10,15 @@
 )
 SELECT @@servername AS server_name,
     COALESCE(Db_name(st.dbid), Db_name(Cast(pa.value AS INT)), 'Resource') AS [DatabaseName],
-    COALESCE(Object_name(st.objectid, st.dbid), '<none>') AS [object_name],
+    COALESCE(Object_name(ST.objectid, ST.dbid), '<none>') AS [object_name],
     qs.query_hash,
     qs.execution_count,
     executions AS total_executions_for_query,
-    Substring(st.[text],(qs.statement_start_offset + 2) / 2,
+    Substring(ST.text,(QS.statement_start_offset + 2) / 2,
         (CASE
-            WHEN qs.statement_end_offset = -1  THEN Len(CONVERT(NVARCHAR(max), st.text)) * 2
-            ELSE qs.statement_end_offset + 2
-            END - qs.statement_start_offset) / 2) AS sql_text,
+            WHEN QS.statement_end_offset = -1  THEN Len(CONVERT(NVARCHAR(max),ST.text)) * 2
+            ELSE QS.statement_end_offset
+            END - QS.statement_start_offset) / 2) AS sql_text,
     qp.query_plan
 FROM sys.dm_exec_query_stats qs
 JOIN frequent_queries fq

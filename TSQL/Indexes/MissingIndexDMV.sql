@@ -1,7 +1,9 @@
 SELECT
     sys.objects.NAME AS TableName,
     ( avg_total_user_cost * avg_user_impact ) * ( user_seeks + user_scans ) AS Impact,
-    'CREATE NONCLUSTERED INDEX INDX_IndexName ON ' + sys.objects.NAME COLLATE database_default + ' ( ' + Isnull(mid.equality_columns, '') +
+    'CREATE NONCLUSTERED INDEX INDX_IndexName ON ' 
+    + sys.objects.NAME COLLATE database_default 
+    + ' ( ' + Isnull(mid.equality_columns, '') +
     CASE
         WHEN mid.inequality_columns IS NULL THEN ''
         ELSE

@@ -6,7 +6,6 @@ SELECT TOP 20
 	CAST(CAST(dm_exec_query_stats.total_elapsed_time AS DECIMAL)/CAST(dm_exec_query_stats.execution_count AS DECIMAL) AS INT) as elapsed_time_per_execution,
 	dm_exec_query_stats.creation_time, 
 	dm_exec_query_stats.last_execution_time,
-	dm_exec_query_stats.
 	dm_exec_query_stats.execution_count,
 	dm_exec_query_stats.total_worker_time AS total_cpu_time,
 	dm_exec_query_stats.max_worker_time AS max_cpu_time, 
@@ -30,4 +29,3 @@ INNER JOIN sys.dm_exec_cached_plans
 WHERE databases.name = '<database_name>'
 	AND dm_exec_sql_text.text like '%Storage_Id%'
 ORDER BY last_execution_time DESC;
-

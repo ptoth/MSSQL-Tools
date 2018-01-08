@@ -6,8 +6,7 @@ SELECT DB_NAME(database_id) as 'Database',
 	-- Default Rebuild SQL
 	'ALTER INDEX ['+dbindexes.[name]+'] ON ['+dbschemas.[name]+'].['+dbtables.[name]+'] REBUILD PARTITION = ALL WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = ON, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)' AS DefaultRebuildSQL,
 	-- Adaptive Index Defrag SQL
-	'EXEC msdb.dbo.usp_AdaptiveIndexDefrag @sortInTempDB=1, @dbscope='''+DB_NAME(database_id)+''', '+'@tblName= '''+dbschemas.[name]+'.'+dbtables.[name]+'''; RAISERROR(''Indexes on '+dbschemas.[name]+'.'+dbtables.[name]+' rebuilded...'', 0, 42) WITH NOWAIT; GO' AS AdaptiveIndexDefragSQL
-
+	'EXEC msdb.dbo.usp_AdaptiveIndexDefrag @sortInTempDB=1, @dbscope='''+DB_NAME(database_id)+''', '+'@tblName= '''+dbschemas.[name]+'.'+dbtables.[name]+'''; RAISERROR(''Indexes on '+dbschemas.[name]+'.'+dbtables.[name]+' rebuilded...'', 0, 42) WITH NOWAIT;' AS AdaptiveIndexDefragSQL
 FROM sys.dm_db_index_physical_stats (DB_ID(), NULL, NULL, NULL, NULL) AS indexstats
 INNER JOIN sys.tables dbtables
     ON dbtables.[object_id] = indexstats.[object_id]

@@ -13,9 +13,6 @@ SELECT	@@SERVERNAME AS DB,
 FROM sys.databases
 WHERE SUSER_SNAME(owner_sid) != 'sa'
 	AND SUSER_SNAME(owner_sid) != 'Domain\User'
-	AND SUSER_SNAME(owner_sid) != 'Domain\User'
-	AND SUSER_SNAME(owner_sid) != 'Domain\User'
-	AND SUSER_SNAME(owner_sid) != 'Domain\User'
 ORDER BY db DESC;
 
 --USE Database; EXEC [Database]..sp_changedbowner 'sa';
