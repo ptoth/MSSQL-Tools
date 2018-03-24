@@ -1,3 +1,6 @@
+-- To Check:
+--kill <SPID> with statusonly
+
 --For MS SQL Server 2012 and above
 
 USE [master];

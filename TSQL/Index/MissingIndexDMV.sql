@@ -1,7 +1,13 @@
 SELECT
     sys.objects.NAME AS TableName,
+    migs.avg_user_impact AS 'Average User Impact %',
+    migs.user_seeks AS 'Average User Seeks',
+    -- avg_total_user_cost: Average cost of the user queries that could be reduced by the index in the group.
+    -- avg_user_impact: Average percentage benefit that user queries could experience if this missing index group was implemented. The value means that the query cost would on average drop by this percentage if this missing index group was implemented.
+    -- user_seeks	bigint	Number of seeks caused by user queries that the recommended index in the group could have been used for.
+    -- user_scans	bigint	Number of scans caused by user queries that the recommended index in the group could have been used for.
     ( avg_total_user_cost * avg_user_impact ) * ( user_seeks + user_scans ) AS Impact,
-    'CREATE NONCLUSTERED INDEX INDX_IndexName ON ' 
+    'CREATE NONCLUSTERED INDEX IXNC_IndexName ON ' 
     + sys.objects.NAME COLLATE database_default 
     + ' ( ' + Isnull(mid.equality_columns, '') +
     CASE
@@ -36,4 +42,4 @@ WHERE ( migs.group_handle IN
         ) 
       )
 AND Objectproperty(sys.objects.object_id, 'isusertable') = 1
-ORDER BY 2 DESC, 3 DESC
+ORDER BY 2 DESC, 4 DESC, 3 DESC

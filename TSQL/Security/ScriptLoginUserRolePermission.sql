@@ -47,7 +47,7 @@ ORDER BY DBName'
 INSERT @T_DBuser EXEC Sp_msforeachdb @SQLStatement SELECT * FROM @T_DBuser ORDER BY dbname
 
 --Get objects permission of specified user database
-USE <DATABASE NAME>
+USE SPL
 GO
 
 DECLARE @Obj VARCHAR(4000)
@@ -60,4 +60,4 @@ FROM sys.database_permissions dp
     JOIN sys.sysusers Us ON dp.grantee_principal_id = Us.uid
     JOIN sys.sysobjects Obj ON dp.major_id = Obj.id '
 
-INSERT @T_Obj EXEC Sp_msforeachdb @ObjSELECT * FROM @T_Obj
+INSERT @T_Obj EXEC Sp_msforeachdb @Obj SELECT * FROM @T_Obj
