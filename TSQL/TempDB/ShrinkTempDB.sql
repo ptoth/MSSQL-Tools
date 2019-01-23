@@ -58,5 +58,5 @@ Open transactions may cause the DBCC operation to fail,
 and possibly corrupt your tempdb!
 */
 
-DBCC SHRINKFILE (TEMPDEV, 4096);   --- New file size in MB
+DBCC SHRINKFILE (TEMPDEV, 10240);   --- New file size in MB
 GO

@@ -7,7 +7,7 @@ ALTER login sa ENABLE
 GO
 
 -- Update SA password
-Sp_password NULL,'new_password_here','sa'
+Sp_password NULL,'123456789Xc','sa'
 GO
 
 -- Exit the prompt

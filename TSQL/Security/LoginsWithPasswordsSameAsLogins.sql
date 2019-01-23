@@ -7,3 +7,9 @@ FROM master.sys.sql_logins
 WHERE pwdcompare(name,pASsword_hASh) = 1
 ORDER BY name
 OPTION (maxdop 1) 
+
+
+use MyDatabase
+go
+GRANT EXECUTE ON SCHEMA::[dbo] TO MyUser
+go
