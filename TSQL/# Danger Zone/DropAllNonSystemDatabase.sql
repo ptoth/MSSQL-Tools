@@ -1,4 +1,4 @@
-SELECT 
+SELECT
 	'EXEC msdb.dbo.sp_delete_database_backuphistory @database_name = N'''
 	+ name
 	+'''; DROP DATABASE ['

@@ -3,30 +3,30 @@
 *** Author: GlutenFreeSQL
 *****************************************************/
 DECLARE @DBLogins TABLE 
-( 
-    username SYSNAME, 
+(
+    username SYSNAME,
     usersid VARBINARY(85) 
-) 
+)
 
-INSERT INTO @DBLogins 
-EXEC Sp_msforeachdb 'USE ? SELECT [name], sid from sys.database_principals WHERE type <> ''R'' ' 
+INSERT INTO @DBLogins
+EXEC Sp_msforeachdb 'USE ? SELECT [name], sid from sys.database_principals WHERE type <> ''R'' '
 
-USE master 
+USE master
 
-SELECT NAME 
-FROM syslogins 
+SELECT NAME
+FROM syslogins
 WHERE [name] NOT IN
     (
-        SELECT DISTINCT username 
-        FROM @DBLogins
-    ) 
+        SELECT DISTINCT username
+    FROM @DBLogins
+    )
     AND [sid] NOT IN
     (
-        SELECT DISTINCT usersid 
-        FROM @DBLogins
-        WHERE usersid IS NOT NULL
-    ) 
-    AND sysadmin <> 1 
+        SELECT DISTINCT usersid
+    FROM @DBLogins
+    WHERE usersid IS NOT NULL
+    )
+    AND sysadmin <> 1
     AND hasaccess = 1 
  
 /*

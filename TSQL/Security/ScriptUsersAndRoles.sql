@@ -4,9 +4,13 @@ This script will generate the Logins and Database user information in a SQL Serv
 This script can be used to gather Database user information prior to data refresh. A where cluase for that database name should be added to the script*/
 
 
-IF  EXISTS (SELECT * FROM tempdb.dbo.sysobjects WHERE name = '##Users' AND type in (N'U'))
+IF  EXISTS (SELECT *
+FROM tempdb.dbo.sysobjects
+WHERE name = '##Users' AND type in (N'U'))
     DROP TABLE ##Users
-IF  EXISTS (SELECT * FROM tempdb.dbo.sysobjects WHERE name = '##LOGINS' AND type in (N'U'))
+IF  EXISTS (SELECT *
+FROM tempdb.dbo.sysobjects
+WHERE name = '##LOGINS' AND type in (N'U'))
     DROP TABLE ##LOGINS
 GO
 
@@ -29,90 +33,92 @@ GO
 )*/
 CREATE TABLE ##Users
 (
-    [Database]          VARCHAR(64),
-    [Database User ID]  VARCHAR(64),
-    [Server Login]      VARCHAR(64),
-    [Database Role]     VARCHAR(64)
+    [Database] VARCHAR(64),
+    [Database User ID] VARCHAR(64),
+    [Server Login] VARCHAR(64),
+    [Database Role] VARCHAR(64)
 )
 use master
 go
-SELECT  sid,
-        loginname AS [Login Name], 
-        dbname AS [Default Database],
-        CASE isntname 
+SELECT sid,
+    loginname AS [Login Name],
+    dbname AS [Default Database],
+    CASE isntname 
             WHEN 1 THEN 'AD Login'
             ELSE 'SQL Login'
         END AS [Login Type],
-        CASE 
+    CASE 
             WHEN isntgroup = 1 THEN 'AD Group'
             WHEN isntuser = 1 THEN 'AD User'
             ELSE ''
         END AS [AD Login Type],
-        CASE sysadmin
+    CASE sysadmin
             WHEN 1 THEN 'Yes'
             ELSE 'No'
         END AS [sysadmin],
-        CASE [securityadmin]
+    CASE [securityadmin]
             WHEN 1 THEN 'Yes'
             ELSE 'No'
         END AS [securityadmin],
-        CASE [serveradmin]
+    CASE [serveradmin]
             WHEN 1 THEN 'Yes'
             ELSE 'No'
         END AS [serveradmin],
-        CASE [setupadmin]
+    CASE [setupadmin]
             WHEN 1 THEN 'Yes'
             ELSE 'No'
         END AS [setupadmin],
-        CASE [processadmin]
+    CASE [processadmin]
             WHEN 1 THEN 'Yes'
             ELSE 'No'
         END AS [processadmin],
-        CASE [diskadmin]
+    CASE [diskadmin]
             WHEN 1 THEN 'Yes'
             ELSE 'No'
         END AS [diskadmin],
-        CASE [dbcreator]
+    CASE [dbcreator]
             WHEN 1 THEN 'Yes'
             ELSE 'No'
         END AS [dbcreator],
-        CASE [bulkadmin]
+    CASE [bulkadmin]
             WHEN 1 THEN 'Yes'
             ELSE 'No'
         END AS [bulkadmin]
 INTO ##LOGINS
-FROM dbo.syslogins /*IN ORDER TO GET THE ACCESS INFORMATION A LOGIN ADD THE LOGIN NAME TO THE WHERE CLUASE BELOW*/
-               --WHERE [LOGINNAME] = 'PUNCH IN THE LOGIN NAME HERE'
+FROM dbo.syslogins
+/*IN ORDER TO GET THE ACCESS INFORMATION A LOGIN ADD THE LOGIN NAME TO THE WHERE CLUASE BELOW*/
+--WHERE [LOGINNAME] = 'PUNCH IN THE LOGIN NAME HERE'
 
-SELECT  [Login Name],   
-        [Default Database],   
-        [Login Type],   
-        [AD Login Type],   
-        [sysadmin],   
-        [securityadmin],   
-        [serveradmin],   
-        [setupadmin],   
-        [processadmin],   
-        [diskadmin],   
-        [dbcreator],   
-        [bulkadmin]
+SELECT [Login Name],
+    [Default Database],
+    [Login Type],
+    [AD Login Type],
+    [sysadmin],
+    [securityadmin],
+    [serveradmin],
+    [setupadmin],
+    [processadmin],
+    [diskadmin],
+    [dbcreator],
+    [bulkadmin]
 FROM tempdb..##LOGINS
 ORDER BY [Login Type], [AD Login Type], [Login Name]
 
 
 USE master
-GO  
+GO
 
 DECLARE @DBName             VARCHAR(60)
 DECLARE @SQLCmd             VARCHAR(1024)
 Declare @DBID            varchar(3)
 
-set @DBID = (select MAX(database_id) from sys.databases)
+set @DBID = (select MAX(database_id)
+from sys.databases)
 --print @DBID
 WHILE @DBID != 0
 BEGIN
-   set @DBName = (select DB_NAME (''+@DBID+''))
-      SELECT @SQLCmd = 'INSERT ##Users ' +
+    set @DBName = (select DB_NAME (''+@DBID+''))
+    SELECT @SQLCmd = 'INSERT ##Users ' +
                          '  SELECT ''' + @DBName + ''' AS [Database],' +
                          '       su.[name] AS [Database User ID], ' +
                          '       COALESCE (u.[Login Name], ''** Orphaned **'') AS [Server Login], ' +
@@ -127,26 +133,31 @@ BEGIN
                          '    WHERE su.hasdbaccess = 1' +
                          '      AND su.[name] != ''dbo'' '
     print @DBName
-     EXEC (@SQLCmd)
-     print @DBID
-     set @DBID = @DBID - 1
+    EXEC (@SQLCmd)
+    print @DBID
+    set @DBID = @DBID - 1
 END
 
 
 
 
-SELECT * 
-    FROM ##Users /*IN ORDER TO GET THE ACCESS INFORMATION A USER ADD THE USER TO THE WEHRE CLUASE BELOW*/
-               --WHERE [Database User ID] = 'PUNCH IN THE USER HERE'
-            /*IN ORDER TO GET THE ACCESS INFORMATION OF ALL USERS TO A PARTICULAR DATABASE, ADD THE DATABASE NAME TO THE WHERE CLUASE BELOW*/
-               --WHERE [DATABASE] = 'PUNCH IN YOUR DATABASE NAME HERE'
-    ORDER BY [Database], [Database User ID]
-    
-IF  EXISTS (SELECT * FROM tempdb.dbo.sysobjects WHERE name = '##LOGINS' AND type in (N'U'))
+SELECT *
+FROM ##Users
+/*IN ORDER TO GET THE ACCESS INFORMATION A USER ADD THE USER TO THE WEHRE CLUASE BELOW*/
+--WHERE [Database User ID] = 'PUNCH IN THE USER HERE'
+/*IN ORDER TO GET THE ACCESS INFORMATION OF ALL USERS TO A PARTICULAR DATABASE, ADD THE DATABASE NAME TO THE WHERE CLUASE BELOW*/
+--WHERE [DATABASE] = 'PUNCH IN YOUR DATABASE NAME HERE'
+ORDER BY [Database], [Database User ID]
+
+IF  EXISTS (SELECT *
+FROM tempdb.dbo.sysobjects
+WHERE name = '##LOGINS' AND type in (N'U'))
     DROP TABLE ##LOGINS
 
 GO
-IF  EXISTS (SELECT * FROM tempdb.dbo.sysobjects WHERE name = '##Users' AND type in (N'U'))
+IF  EXISTS (SELECT *
+FROM tempdb.dbo.sysobjects
+WHERE name = '##Users' AND type in (N'U'))
     DROP TABLE ##Users
     
 GO

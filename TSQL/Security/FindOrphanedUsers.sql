@@ -2,15 +2,15 @@
 *** Script to find orphaned database users
 *** Author: GlutenFreeSQL
 *****************************************************/
- 
+
 --drop table #DBUsers
 DECLARE @DBUsers TABLE 
-    ( 
-        databasename SYSNAME, 
-        username     SYSNAME 
-    ) 
+    (
+    databasename SYSNAME,
+    username SYSNAME 
+    )
 
-INSERT @DBUsers 
+INSERT @DBUsers
 EXEC Sp_msforeachdb 
     '
     USE ? 
@@ -37,7 +37,8 @@ EXEC Sp_msforeachdb
             select distinct SCHEMA_NAME(schema_id) 
             from sys.objects
         )
-    ' 
- 
-select * from @DBUsers
+    '
+
+select *
+from @DBUsers
 order by DatabaseName, UserName

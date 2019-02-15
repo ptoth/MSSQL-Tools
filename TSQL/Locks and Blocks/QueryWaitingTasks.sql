@@ -41,13 +41,13 @@ SELECT
     [eqp].[query_plan],
     [est].text
 FROM sys.dm_os_waiting_tasks [owt]
-INNER JOIN sys.dm_os_tasks [ot] ON
+    INNER JOIN sys.dm_os_tasks [ot] ON
     [owt].[waiting_task_address] = [ot].[task_address]
-INNER JOIN sys.dm_exec_sessions [es] ON
+    INNER JOIN sys.dm_exec_sessions [es] ON
     [owt].[session_id] = [es].[session_id]
-INNER JOIN sys.dm_exec_requests [er] ON
+    INNER JOIN sys.dm_exec_requests [er] ON
     [es].[session_id] = [er].[session_id]
-FULL JOIN sys.dm_exec_query_memory_grants [eqmg] ON
+    FULL JOIN sys.dm_exec_query_memory_grants [eqmg] ON
     [owt].[session_id] = [eqmg].[session_id]
 OUTER APPLY sys.dm_exec_sql_text ([er].[sql_handle]) [est]
 OUTER APPLY sys.dm_exec_query_plan ([er].[plan_handle]) [eqp]

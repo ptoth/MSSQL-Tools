@@ -16,9 +16,11 @@ Declare @Id int
 Set @Id = 1
 
 While @Id <= 12000
-Begin 
-   Insert Into tblAuthors values ('Author - ' + CAST(@Id as nvarchar(10)),
-              'Country - ' + CAST(@Id as nvarchar(10)) + ' name')
+Begin
+   Insert Into tblAuthors
+   values
+      ('Author - ' + CAST(@Id as nvarchar(10)),
+         'Country - ' + CAST(@Id as nvarchar(10)) + ' name')
    Print @Id
    Set @Id = @Id + 1
 End
@@ -37,8 +39,8 @@ Set @UpperLimitForAuthorId = 12000
 Declare @LowerLimitForPrice int
 Declare @UpperLimitForPrice int
 
-Set @LowerLimitForPrice = 50 
-Set @UpperLimitForPrice = 100 
+Set @LowerLimitForPrice = 50
+Set @UpperLimitForPrice = 100
 
 Declare @LowerLimitForEdition int
 Declare @UpperLimitForEdition int
@@ -51,14 +53,16 @@ Declare @count int
 Set @count = 1
 
 While @count <= 20000
-Begin 
+Begin
 
    Select @RandomAuthorId = Round(((@UpperLimitForAuthorId - @LowerLimitForAuthorId) * Rand()) + @LowerLimitForAuthorId, 0)
    Select @RandomPrice = Round(((@UpperLimitForPrice - @LowerLimitForPrice) * Rand()) + @LowerLimitForPrice, 0)
    Select @RandomEdition = Round(((@UpperLimitForEdition - @LowerLimitForEdition) * Rand()) + @LowerLimitForEdition, 0)
 
 
-   Insert Into tblBooks values (@RandomAuthorId, @RandomPrice, @RandomEdition)
+   Insert Into tblBooks
+   values
+      (@RandomAuthorId, @RandomPrice, @RandomEdition)
    Print @count
    Set @count = @count + 1
 End

@@ -14,6 +14,9 @@ DECLARE @AllConnections TABLE(
     REQUESTID INT
 )
 
-INSERT INTO @AllConnections EXEC sp_who2
+INSERT INTO @AllConnections
+EXEC sp_who2
 
-SELECT * FROM @AllConnections WHERE DBName = 'YourDatabaseName'
+SELECT *
+FROM @AllConnections
+WHERE DBName = 'YourDatabaseName'

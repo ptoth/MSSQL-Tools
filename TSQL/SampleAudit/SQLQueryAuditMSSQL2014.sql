@@ -1,39 +1,39 @@
 SELECT name,
-CAST(value as int) as value_configured,
-CAST(value_in_use as int) as value_in_use
+    CAST(value as int) as value_configured,
+    CAST(value_in_use as int) as value_in_use
 FROM sys.configurations
 WHERE name = 'Cross db ownership chaining';
 
 SELECT name,
-CAST(value as int) as value_configured,
-CAST(value_in_use as int) as value_in_use
+    CAST(value as int) as value_configured,
+    CAST(value_in_use as int) as value_in_use
 FROM sys.configurations
 WHERE name = 'Database Mail XPs';
 
 SELECT name,
-CAST(value as int) as value_configured,
-CAST(value_in_use as int) as value_in_use
+    CAST(value as int) as value_configured,
+    CAST(value_in_use as int) as value_in_use
 FROM sys.configurations
 WHERE name = 'Ole Automation Procedures';
 
 SELECT name,
-CAST(value as int) as value_configured,
-CAST(value_in_use as int) as value_in_use
+    CAST(value as int) as value_configured,
+    CAST(value_in_use as int) as value_in_use
 FROM sys.configurations
 WHERE name = 'Remote access';
 
 USE master;
 GO
 SELECT name,
-CAST(value as int) as value_configured,
-CAST(value_in_use as int) as value_in_use
+    CAST(value as int) as value_configured,
+    CAST(value_in_use as int) as value_in_use
 FROM sys.configurations
 WHERE name = 'Remote admin connections'
-AND SERVERPROPERTY('IsClustered') = 0;
+    AND SERVERPROPERTY('IsClustered') = 0;
 
 SELECT name,
-CAST(value as int) as value_configured,
-CAST(value_in_use as int) as value_in_use
+    CAST(value as int) as value_configured,
+    CAST(value_in_use as int) as value_in_use
 FROM sys.configurations
 WHERE name = 'Scan for startup procs';
 
@@ -41,8 +41,8 @@ WHERE name = 'Scan for startup procs';
 SELECT name
 FROM sys.databases
 WHERE is_trustworthy_on = 1
-AND name != 'msdb'
-AND state = 0;
+    AND name != 'msdb'
+    AND state = 0;
 
 
 SELECT name, is_disabled
@@ -66,10 +66,10 @@ WHERE containment <> 0 and is_auto_close_on = 1;
 
 SELECT DB_NAME() AS DBName, dpr.name, dpe.permission_name
 FROM sys.database_permissions dpe
-JOIN sys.database_principals dpr
-ON dpe.grantee_principal_id=dpr.principal_id
+    JOIN sys.database_principals dpr
+    ON dpe.grantee_principal_id=dpr.principal_id
 WHERE dpr.name='guest'
-AND dpe.permission_name='CONNECT';
+    AND dpe.permission_name='CONNECT';
 
 
 
@@ -78,32 +78,32 @@ AND dpe.permission_name='CONNECT';
 SELECT name AS DBUser
 FROM sys.database_principals
 WHERE name NOT IN ('dbo','Information_Schema','sys','guest')
-AND type IN ('U','S','G')
-AND authentication_type = 2;
+    AND type IN ('U','S','G')
+    AND authentication_type = 2;
 GO
 
 
 SELECT SQLLoginName = sp.name
 FROM sys.server_principals sp
-JOIN sys.sql_logins AS sl
-ON sl.principal_id = sp.principal_id
+    JOIN sys.sql_logins AS sl
+    ON sl.principal_id = sp.principal_id
 WHERE sp.type_desc = 'SQL_LOGIN'
-AND sp.name in
+    AND sp.name in
 (SELECT name AS IsSysAdmin
-FROM sys.server_principals p
-WHERE IS_SRVROLEMEMBER('sysadmin',name) = 1)
-AND sl.is_expiration_checked <> 1;
+    FROM sys.server_principals p
+    WHERE IS_SRVROLEMEMBER('sysadmin',name) = 1)
+    AND sl.is_expiration_checked <> 1;
 
 
 SELECT SQLLoginName = sp.name,
-PasswordPolicyEnforced = CAST(sl.is_policy_checked AS BIT)
+    PasswordPolicyEnforced = CAST(sl.is_policy_checked AS BIT)
 FROM sys.server_principals sp
-JOIN sys.sql_logins AS sl ON sl.principal_id = sp.principal_id
+    JOIN sys.sql_logins AS sl ON sl.principal_id = sp.principal_id
 WHERE sp.type_desc = 'SQL_LOGIN';
 
 
 SELECT name,
-CAST(value as int) as value_configured,
-CAST(value_in_use as int) as value_in_use
+    CAST(value as int) as value_configured,
+    CAST(value_in_use as int) as value_in_use
 FROM sys.configurations
 WHERE name = 'Default trace enabled';

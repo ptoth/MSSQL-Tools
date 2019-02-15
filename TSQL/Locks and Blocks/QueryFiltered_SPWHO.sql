@@ -14,7 +14,8 @@ DECLARE @Table TABLE(
     REQUESTID INT
 )
 
-INSERT INTO @Table EXEC sp_who2
+INSERT INTO @Table
+EXEC sp_who2
 
 SELECT *
 FROM @Table

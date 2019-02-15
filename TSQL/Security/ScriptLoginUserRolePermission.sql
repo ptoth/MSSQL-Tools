@@ -30,7 +30,9 @@ WHERE sp.type <> 'R'
 
 --Databases users and roles
 DECLARE @SQLStatement VARCHAR(4000)
-DECLARE @T_DBuser TABLE (dbname SYSNAME, username SYSNAME, associateddbrole NVARCHAR(256))
+DECLARE @T_DBuser TABLE (dbname SYSNAME,
+    username SYSNAME,
+    associateddbrole NVARCHAR(256))
 
 SET @SQLStatement='
 SELECT ''?'' AS DBName,dp.name AS UserName,USER_NAME(drm.role_principal_id) AS AssociatedDBRole
@@ -44,14 +46,20 @@ WHERE dp.sid NOT IN (0x01)
 	AND ''?'' NOT IN (''master'',''msdb'',''model'',''tempdb'')
 ORDER BY DBName'
 
-INSERT @T_DBuser EXEC Sp_msforeachdb @SQLStatement SELECT * FROM @T_DBuser ORDER BY dbname
+INSERT @T_DBuser
+EXEC Sp_msforeachdb @SQLStatement
+SELECT *
+FROM @T_DBuser
+ORDER BY dbname
 
 --Get objects permission of specified user database
 USE SPL
 GO
 
 DECLARE @Obj VARCHAR(4000)
-DECLARE @T_Obj TABLE (username SYSNAME, objectname SYSNAME, permission NVARCHAR(128))
+DECLARE @T_Obj TABLE (username SYSNAME,
+    objectname SYSNAME,
+    permission NVARCHAR(128))
 SET @Obj='
 SELECT Us.name AS username,
     Obj.name AS object,
@@ -60,4 +68,7 @@ FROM sys.database_permissions dp
     JOIN sys.sysusers Us ON dp.grantee_principal_id = Us.uid
     JOIN sys.sysobjects Obj ON dp.major_id = Obj.id '
 
-INSERT @T_Obj EXEC Sp_msforeachdb @Obj SELECT * FROM @T_Obj
+INSERT @T_Obj
+EXEC Sp_msforeachdb @Obj
+SELECT *
+FROM @T_Obj

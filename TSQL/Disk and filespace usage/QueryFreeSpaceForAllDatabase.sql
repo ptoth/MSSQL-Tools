@@ -11,48 +11,49 @@ DECLARE @ServerVersion varchar(100)
 SET @ServerVersion = CONVERT(varchar,SERVERPROPERTY('productversion'))
 SET @ServerVersion = LEFT(@ServerVersion, CHARINDEX('.',@ServerVersion, 4)-1)
 --PRINT @ServerVersion
-DECLARE @command nvarchar(2000)  
-    
+DECLARE @command nvarchar(2000)
+
 IF OBJECT_ID('tempdb..#FileData','U') IS NOT NULL
 BEGIN
     PRINT 'Dropping #FileData'
     DROP TABLE tempdb..#FileData
-END    
+END
 
 CREATE TABLE tempdb..#FileData
 (
-    [CurrentHost]                   varchar(250) COLLATE Latin1_General_CI_AS NULL,
-    [ClusterNodes]                  varchar(250) COLLATE Latin1_General_CI_AS NULL,
-    [DB]                            varchar(250) COLLATE Latin1_General_CI_AS NULL,
-    [FileType]                      varchar(250) COLLATE Latin1_General_CI_AS NULL,
-    [Name]                          varchar(250) COLLATE Latin1_General_CI_AS NULL,
-    [VolumeOrDrive]                 varchar(250) COLLATE Latin1_General_CI_AS NULL,
-    [FileName]                      varchar(250) COLLATE Latin1_General_CI_AS NULL,
-    [File Size (MB)]                decimal(15,2) NULL,
-    [Space Used In File (MB)]       decimal(15,2) NULL,
-    [Available Space In File (MB)]  decimal(15,2) NULL,
-    [Drive Free Space (MB)]         decimal(15,2) NULL
-)    
-IF CONVERT(float, @ServerVersion) < 10.5 BEGIN --–2000, 2005, 2008
+    [CurrentHost] varchar(250) COLLATE Latin1_General_CI_AS NULL,
+    [ClusterNodes] varchar(250) COLLATE Latin1_General_CI_AS NULL,
+    [DB] varchar(250) COLLATE Latin1_General_CI_AS NULL,
+    [FileType] varchar(250) COLLATE Latin1_General_CI_AS NULL,
+    [Name] varchar(250) COLLATE Latin1_General_CI_AS NULL,
+    [VolumeOrDrive] varchar(250) COLLATE Latin1_General_CI_AS NULL,
+    [FileName] varchar(250) COLLATE Latin1_General_CI_AS NULL,
+    [File Size (MB)] decimal(15,2) NULL,
+    [Space Used In File (MB)] decimal(15,2) NULL,
+    [Available Space In File (MB)] decimal(15,2) NULL,
+    [Drive Free Space (MB)] decimal(15,2) NULL
+)
+IF CONVERT(float, @ServerVersion) < 10.5 BEGIN
+    --–2000, 2005, 2008
 
     IF OBJECT_ID('tempdb..#xp_fixeddrives','U') IS NOT NULL
-    BEGIN 
+    BEGIN
         PRINT 'Dropping table #xp_fixeddrives'
         DROP TABLE #xp_fixeddrives;
     END
 
     CREATE TABLE #xp_fixeddrives
     (
-        Drive   varchar(250),
-        MBFree  int
+        Drive varchar(250),
+        MBFree int
     )
-    
+
     INSERT INTO #xp_fixeddrives
-    (
+        (
         Drive,
         MBFree
-    )
-    EXEC master..xp_fixeddrives  
+        )
+    EXEC master..xp_fixeddrives
 
 
     SET @command = '
@@ -118,12 +119,13 @@ BEGIN
       FROM sys.sysfiles f WITH (NOLOCK)
      INNER JOIN sys.database_files df ON df.file_id = f.fileid 
      CROSS APPLY sys.dm_os_volume_stats(DB_ID(), f.fileid) v;'
-END -- END IF
+END
+-- END IF
 
-EXEC sp_MSforeachdb @command 
+EXEC sp_MSforeachdb @command
 
 SELECT *
-  FROM #FileData
+FROM #FileData
 
 DROP TABLE tempdb..#FileData
 GO
