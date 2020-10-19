@@ -6,5 +6,5 @@ SELECT cp.objtype AS ObjectType,
 FROM sys.dm_exec_cached_plans AS cp WITH (NOLOCK)
 	CROSS APPLY sys.dm_exec_query_plan(cp.plan_handle) AS qp
 	CROSS APPLY sys.dm_exec_sql_text(cp.plan_handle) AS st
---WHERE OBJECT_NAME(st.objectid,st.dbid) = 'DataBaseName'
+--WHERE OBJECT_NAME(st.objectid,st.dbid) = 'MyDB'
 ORDER BY ExecutionCount DESC

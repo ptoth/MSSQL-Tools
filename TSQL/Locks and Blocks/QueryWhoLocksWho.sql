@@ -1,37 +1,23 @@
 DECLARE @LockTable TABLE
 (
     SPID INT
-    ,
-    [Status] varchar( 100 )
-    ,
-    [Login] varchar( 100 )
-    ,
-    HostName varchar(100 )
-    ,
-    BlkBy VARCHAR( 100 )
-    ,
-    DBName varchar( 100 )
-    ,
-    Command varchar( 100 )
-    ,
-    CPUTime BIGINT
-    ,
-    DiskIO BIGINT
-    ,
-    LastBatch varchar( 100 )
-    ,
-    ProgramName VARCHAR( 100 )
-    ,
-    SPID2 INT
-    ,
-    REQUESTID INT
-    ,
-    BlockOrder INT
+    ,[Status] varchar( 100 )
+    ,[Login] varchar( 100 )
+    ,HostName varchar(100 )
+    ,BlkBy VARCHAR( 100 )
+    ,DBName varchar( 100 )
+    ,Command varchar( 100 )
+    ,CPUTime BIGINT
+    ,DiskIO BIGINT
+    ,LastBatch varchar( 100 )
+    ,ProgramName VARCHAR( 100 )
+    ,SPID2 INT
+    ,REQUESTID INT
+    ,BlockOrder INT
 )
 
 INSERT INTO @LockTable
-    (
-    SPID
+    ( SPID
     , [Status]
     , [Login]
     , HostName
@@ -58,12 +44,11 @@ WHERE BlkBy = '0'
     AND EXISTS
     (
         SELECT 1
-    FROM @LockTable L1
-    WHERE CAST( L1.BlkBy AS INT ) = L.SPID
+        FROM @LockTable L1
+        WHERE CAST( L1.BlkBy AS INT ) = L.SPID
     )
 
-SELECT
-    BlockOrder
+SELECT BlockOrder
     , SPID
     , [Status]
     , [Login]

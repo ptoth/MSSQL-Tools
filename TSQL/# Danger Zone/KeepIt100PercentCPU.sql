@@ -74,13 +74,12 @@ BEGIN
     )
   SELECT MAX(ca.n)
   FROM e2
+
 CROSS APPLY
 (
-    SELECT TOP 2147483647
-      *
+    SELECT TOP 2147483647 *
     FROM (
-                                                                                SELECT TOP 2147483647
-          *
+      SELECT TOP 2147483647 *
         FROM e2
       UNION ALL
         SELECT *
@@ -119,11 +118,6 @@ CROSS APPLY
     WHERE x.n = e2.n
     ORDER BY x.n
 ) AS ca
-  OPTION(MAXDOP
-  0,
-  LOOP
-  JOIN,
-  QUERYTRACEON
-  8649);
+  OPTION(MAXDOP 0, LOOP JOIN, QUERYTRACEON 8649);
 
 END;

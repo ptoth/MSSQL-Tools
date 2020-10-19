@@ -1,4 +1,2 @@
-SELECT
-    name,
-    accdate
+SELECT name, accdate
 FROM sys.syslogins

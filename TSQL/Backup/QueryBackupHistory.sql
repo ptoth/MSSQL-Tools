@@ -21,5 +21,5 @@ SELECT
 FROM msdb.dbo.backupset bs
 	INNER JOIN msdb.dbo.backupmediafamily bmf
 	ON [bs].[media_set_id] = [bmf].[media_set_id]
-WHERE bs.database_name = 'DATABASE_NAME'
+WHERE bs.database_name = 'MyDB'
 ORDER BY bs.backup_start_date DESC;

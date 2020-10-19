@@ -19,4 +19,4 @@ EXEC sp_who2
 
 SELECT *
 FROM @AllConnections
-WHERE DBName = 'YourDatabaseName'
+WHERE DBName = 'MyDB'
