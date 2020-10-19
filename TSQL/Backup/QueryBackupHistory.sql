@@ -1,9 +1,3 @@
-DECLARE @DBName SYSNAME;
-SET @DBName = DB_NAME();
--- modify these as you desire.
-SET @DBName = NULL;
--- comment this line if you want to limit the displayed history
-
 SELECT
 	ServerName = bs.server_name,
 	DatabaseName = bs.database_name,
@@ -27,5 +21,5 @@ SELECT
 FROM msdb.dbo.backupset bs
 	INNER JOIN msdb.dbo.backupmediafamily bmf
 	ON [bs].[media_set_id] = [bmf].[media_set_id]
-WHERE bs.database_name = '<DATABASE_NAME>'
+WHERE bs.database_name = 'DATABASE_NAME'
 ORDER BY bs.backup_start_date DESC;
