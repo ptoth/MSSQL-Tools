@@ -17,7 +17,8 @@ SELECT
 	--ExpirationDate = bs.expiration_date,
 	--BackupSetName = bs.name,
 	--LogicalDeviceName = bmf.logical_device_name,
-	PhysicalDeviceName = bmf.physical_device_name
+	PhysicalDeviceName = bmf.physical_device_name,
+	BackupCreator = bs.user_name
 FROM msdb.dbo.backupset bs
 	INNER JOIN msdb.dbo.backupmediafamily bmf
 	ON [bs].[media_set_id] = [bmf].[media_set_id]
