@@ -45,7 +45,7 @@ $qryToBackup = '<Backup xmlns="http://schemas.microsoft.com/analysisservices/200
   <Object>
     <DatabaseID><CHANGE_DB></DatabaseID>
   </Object>
-  <File>\\SC41WFADBCLS51\Backup_share\<CHANGE_DB>.abf</File>
+  <File>\\MySSAS\Backup_share\<CHANGE_DB>.abf</File>
   <AllowOverwrite>true</AllowOverwrite>
   <ApplyCompression>false</ApplyCompression>
 </Backup>'
@@ -68,7 +68,7 @@ foreach($database in ($src_server.get_Databases()| Where {$databasesToProcess -c
 #Restore all SSAS Cubes on target side
 # Query
 $qryToRestore = '<Restore xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
-  <File>\\SC41WFADBCLS51\Backup_share\<CHANGE_DB>.abf</File>
+  <File>\\MySSAS\Backup_share\<CHANGE_DB>.abf</File>
   <AllowOverwrite>true</AllowOverwrite>
 </Restore>'
 

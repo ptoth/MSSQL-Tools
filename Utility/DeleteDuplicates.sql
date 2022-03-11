@@ -1,0 +1,10 @@
+WITH CTE AS (
+	SELECT *, ROW_NUMBER() OVER(PARTITION BY UnmappedStatus ORDER BY UnmappedStatus) AS DuplicateCount
+	FROM [dbo].[STG_UNMAPPED_STATUSES]
+	WHERE SiteId = 3501
+	)
+
+--SELECT * FROM CTE
+
+DELETE FROM CTE
+WHERE DuplicateCount > 1;
