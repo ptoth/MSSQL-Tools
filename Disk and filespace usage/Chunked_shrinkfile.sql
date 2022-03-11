@@ -7,42 +7,42 @@ Run this script in the database with the file to be shrunk.
 3. Set @ShrinkIncrementMB to the increment to shrink file by in MB
 4. Run the script
 */
-SET nocount on
-DECLARE @DBFileName sysname
-DECLARE @TargetFreeMB int
-DECLARE @ShrinkIncrementMB int
+set nocount on
+declare @DBFileName sysname
+declare @TargetFreeMB int
+declare @ShrinkIncrementMB int
 -- Set Name of Database file to shrink
-SET @DBFileName = 'Database'
+set @DBFileName = '<DATABASE_NAME>'
 -- Set Desired file free space in MB after shrink
-SET @TargetFreeMB = 102400
+set @TargetFreeMB = 102400
 -- Set Increment to shrink file by in MB
-SET @ShrinkIncrementMB = 1024
+set @ShrinkIncrementMB = 1024
 -- Show Size, Space Used, Unused Space, and Name of all database files
-SELECT [FileSizeMB] = CONVERT(NUMERIC(10,2),ROUND(a.size/128.,2)),
-       [UsedSpaceMB]= CONVERT(NUMERIC(10,2),ROUND(fileproperty( a.name,'SpaceUsed')/128.,2)) ,
-       [UnusedSpaceMB]= CONVERT(NUMERIC(10,2),ROUND((a.size-fileproperty( a.name,'SpaceUsed'))/128.,2)) ,
+select [FileSizeMB] = convert(numeric(10,2),round(a.size/128.,2)),
+       [UsedSpaceMB]= convert(numeric(10,2),round(fileproperty( a.name,'SpaceUsed')/128.,2)) ,
+       [UnusedSpaceMB]= convert(numeric(10,2),round((a.size-fileproperty( a.name,'SpaceUsed'))/128.,2)) ,
        [DBFileName]= a.name
-FROM sysfiles a
+from sysfiles a
 
-DECLARE @sql varchar(8000)
-DECLARE @SizeMB bigint
-DECLARE @UsedMB bigint
+declare @sql varchar(8000)
+declare @SizeMB bigint
+declare @UsedMB bigint
 -- Get current file size in MB
-SELECT @SizeMB = size/128. FROM sysfiles where name = @DBFileName
+select @SizeMB = size/128. from sysfiles where name = @DBFileName
 -- Get current space used in MB
-SELECT @UsedMB = fileproperty( @DBFileName,'SpaceUsed')/128.0
+select @UsedMB = fileproperty( @DBFileName,'SpaceUsed')/128.0
 -- Loop until file at desired size
-WHILE  @SizeMB > @UsedMB+@TargetFreeMB+@ShrinkIncrementMB
-BEGIN
-    SET @sql = 'DBCC SHRINKFILE ( '+@DBFileName+', ' + CONVERT(varchar(20),@SizeMB-@ShrinkIncrementMB)+' ) WITH NO_INFOMSGS'
-    PRINT @sql
-    PRINT 'Start ' + @sql + ' at ' + CONVERT(varchar(30),getdate(),121)
-    EXEC ( @sql )
-    PRINT 'Done ' + @sql + ' at '+CONVERT(varchar(30),getdate(),121)
-    -- Get current file size in MB
-    SELECT @SizeMB = size/128. FROM sysfiles where name = @DBFileName
-    -- Get current space used in MB
-    SELECT @UsedMB = fileproperty( @DBFileName,'SpaceUsed')/128.0
-    PRINT 'SizeMB=' + CONVERT(varchar(20),@SizeMB) + ' UsedMB=' + CONVERT(varchar(20),@UsedMB)
-END
---SELECT [EndFileSize] = @SizeMB, [EndUsedSpace] = @UsedMB, [DBFileName] = @DBFileName
+while  @SizeMB > @UsedMB+@TargetFreeMB+@ShrinkIncrementMB
+begin
+ set @sql = 'dbcc shrinkfile ( '+@DBFileName+', ' + convert(varchar(20),@SizeMB-@ShrinkIncrementMB)+' ) WITH NO_INFOMSGS'
+ print @sql
+ print 'Start ' + @sql + ' at ' + convert(varchar(30),getdate(),121)
+ exec ( @sql )
+ print 'Done ' + @sql + ' at '+convert(varchar(30),getdate(),121)
+ -- Get current file size in MB
+ select @SizeMB = size/128. from sysfiles where name = @DBFileName
+ -- Get current space used in MB
+ select @UsedMB = fileproperty( @DBFileName,'SpaceUsed')/128.0
+ print 'SizeMB=' + convert(varchar(20),@SizeMB) + ' UsedMB=' + convert(varchar(20),@UsedMB)
+end
+--select [EndFileSize] = @SizeMB, [EndUsedSpace] = @UsedMB, [DBFileName] = @DBFileName
