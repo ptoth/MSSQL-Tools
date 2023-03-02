@@ -1,7 +1,6 @@
 WITH CTE AS (
-	SELECT *, ROW_NUMBER() OVER(PARTITION BY UnmappedStatus ORDER BY UnmappedStatus) AS DuplicateCount
-	FROM [dbo].[STG_UNMAPPED_STATUSES]
-	WHERE SiteId = 3501
+	SELECT *, ROW_NUMBER() OVER(PARTITION BY Col1 ORDER BY Col1) AS DuplicateCount
+	FROM [dbo].[MyTable]
 	)
 
 --SELECT * FROM CTE

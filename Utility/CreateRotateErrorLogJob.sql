@@ -7,11 +7,10 @@ GO
 USE [msdb]
 GO
 
-/****** Object:  Job [CYCLE_ERROR_LOG]    Script Date: 1/25/2018 7:16:15 PM ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [Database Maintenance]    Script Date: 1/25/2018 7:16:16 PM ******/
+
 IF NOT EXISTS (SELECT name
 FROM msdb.dbo.syscategories
 WHERE name=N'Database Maintenance' AND category_class=1)
@@ -33,7 +32,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'CYCLE_ERROR_LOG',
 		@category_name=N'Database Maintenance', 
 		@owner_login_name=N'sa', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [Cycle]    Script Date: 1/25/2018 7:16:16 PM ******/
+
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Cycle', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 

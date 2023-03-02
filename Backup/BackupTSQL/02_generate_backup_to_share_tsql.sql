@@ -25,10 +25,7 @@ BEGIN
 						WITH NAME = N''' + @db_name + '-Full Database Backup'', 
 						COPY_ONLY, 
 						COMPRESSION, 
-						stats  = 5, 
-						BUFFERCOUNT = 40, 
-						MAXTRANSFERSIZE = 4194304, 
-						BLOCKSIZE = 65536 
+						stats  = 10, 
 				'
 PRINT (@SQL_String)
 --		execute (@SQL_String)

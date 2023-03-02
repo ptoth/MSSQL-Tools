@@ -9,13 +9,8 @@ SET @Rolename = N'db_owner'
 
 /* system databases */
 DECLARE @SystemDatabases AS TABLE(DBName nvarchar(50))
-INSERT INTO @SystemDatabases(DBName) VALUES(N'master')
-INSERT INTO @SystemDatabases(DBName) VALUES(N'tempdb')
-INSERT INTO @SystemDatabases(DBName) VALUES(N'DBA')
 INSERT INTO @SystemDatabases(DBName) VALUES(N'LiteSpeedLocal')
-INSERT INTO @SystemDatabases(DBName) VALUES(N'model')
-INSERT INTO @SystemDatabases(DBName) VALUES(N'msdb')
-INSERT INTO @SystemDatabases(DBName) VALUES(N'SSODB')
+INSERT INTO @SystemDatabases(DBName) VALUES(N'LightSpeedLocal')
 
 /* get a list of all databases */
 DECLARE @Databases AS TABLE(DBName nvarchar(50))
